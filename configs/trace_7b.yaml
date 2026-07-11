@@ -1,0 +1,17 @@
+# TRACE-8, Qwen2.5-7B-Instruct, low-budget protocol (paper Section 6.1).
+model_path: Qwen/Qwen2.5-7B-Instruct
+rank: 16
+alpha: 32
+lr: 1.0e-4
+batch_size: 2
+max_length: 384
+
+n_target: 50          # labelled examples per task
+steps: 500            # optimisation steps per task
+buffer_per_task: 100  # stored examples per completed task
+replay_frac: 0.5      # probability a step draws a replay batch
+
+probe_batches: 10     # probe batches for the task signature
+sig_tau: 0.1          # routing temperature
+kd_lambda: 0.5        # distillation weight
+kd_T: 2.0             # distillation temperature
