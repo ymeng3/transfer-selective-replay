@@ -6,9 +6,11 @@ Official implementation of
 This repository reproduces the TRACE-8 continual-learning experiments
 reported in the paper: one LoRA adapter trained sequentially through
 the eight TRACE tasks under the standard protocol at a low target
-budget. TSR routes replay by task-signature similarity and distils
-each batch against an era snapshot; details are given in Algorithm 2
-of the paper.
+budget. TSR probes each incoming task at a fixed shared
+initialisation to obtain its gradient signature, which routes replay
+and the era-snapshot references used for distillation; `tsr_v1` and
+`tsr_v2` are two routing configurations of the same general algorithm
+(Algorithm 1 of the paper).
 
 ## Installation
 
@@ -28,7 +30,8 @@ run. No manual preprocessing is required.
 ```bash
 bash scripts/run_seqft.sh 0
 bash scripts/run_er.sh 0
-bash scripts/run_tsr.sh 0
+bash scripts/run_tsr_v1.sh 0
+bash scripts/run_tsr_v2.sh 0
 ```
 
 Each command runs one seed (the paper reports seeds 0-4) and writes
@@ -36,7 +39,7 @@ Each command runs one seed (the paper reports seeds 0-4) and writes
 config explicitly:
 
 ```bash
-bash scripts/run_tsr.sh 0 configs/trace_7b.yaml
+bash scripts/run_tsr_v1.sh 0 configs/trace_7b.yaml
 ```
 
 ## Results

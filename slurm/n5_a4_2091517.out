@@ -1,0 +1,44 @@
+[eval] after=0 on=0 (cstance) acc=0.4680 loss=1.131
+[route] task 1 (fomc) top source = 0 (cstance)
+[eval] after=1 on=0 (cstance) acc=0.5120 loss=0.682
+[eval] after=1 on=1 (fomc) acc=0.5101 loss=0.599
+[route] task 2 (meetingbank) top source = 1 (fomc)
+[eval] after=2 on=0 (cstance) acc=0.5080 loss=0.759
+[eval] after=2 on=1 (fomc) acc=0.5303 loss=0.604
+[eval] after=2 on=2 (meetingbank) acc=0.0060 loss=2.458
+[route] task 3 (py150) top source = 2 (meetingbank)
+[eval] after=3 on=0 (cstance) acc=0.4760 loss=0.796
+[eval] after=3 on=1 (fomc) acc=0.5884 loss=0.529
+[eval] after=3 on=2 (meetingbank) acc=0.0220 loss=1.965
+[eval] after=3 on=3 (py150) acc=0.0060 loss=3.312
+[route] task 4 (scienceqa) top source = 1 (fomc)
+[eval] after=4 on=0 (cstance) acc=0.4820 loss=0.754
+[eval] after=4 on=1 (fomc) acc=0.5960 loss=0.517
+[eval] after=4 on=2 (meetingbank) acc=0.0220 loss=1.969
+[eval] after=4 on=3 (py150) acc=0.0060 loss=2.775
+[eval] after=4 on=4 (scienceqa) acc=0.5860 loss=0.919
+[route] task 5 (numglue_cm) top source = 4 (scienceqa)
+[eval] after=5 on=0 (cstance) acc=0.5180 loss=0.721
+[eval] after=5 on=1 (fomc) acc=0.5985 loss=0.535
+[eval] after=5 on=2 (meetingbank) acc=0.0080 loss=2.041
+[eval] after=5 on=3 (py150) acc=0.0060 loss=2.784
+[eval] after=5 on=4 (scienceqa) acc=0.5960 loss=0.573
+[eval] after=5 on=5 (numglue_cm) acc=0.4286 loss=0.887
+[route] task 6 (numglue_ds) top source = 5 (numglue_cm)
+[eval] after=6 on=0 (cstance) acc=0.5040 loss=0.741
+[eval] after=6 on=1 (fomc) acc=0.5732 loss=0.535
+[eval] after=6 on=2 (meetingbank) acc=0.0180 loss=2.037
+[eval] after=6 on=3 (py150) acc=0.0120 loss=2.758
+[eval] after=6 on=4 (scienceqa) acc=0.5920 loss=0.607
+[eval] after=6 on=5 (numglue_cm) acc=0.4870 loss=0.779
+[eval] after=6 on=6 (numglue_ds) acc=0.1380 loss=2.805
+[route] task 7 (twenty_minuten) top source = 2 (meetingbank)
+[eval] after=7 on=0 (cstance) acc=0.5100 loss=0.769
+[eval] after=7 on=1 (fomc) acc=0.5682 loss=0.567
+[eval] after=7 on=2 (meetingbank) acc=0.0120 loss=2.052
+[eval] after=7 on=3 (py150) acc=0.0100 loss=2.804
+[eval] after=7 on=4 (scienceqa) acc=0.6020 loss=0.665
+[eval] after=7 on=5 (numglue_cm) acc=0.5000 loss=0.752
+[eval] after=7 on=6 (numglue_ds) acc=0.1540 loss=1.558
+[eval] after=7 on=7 (twenty_minuten) acc=0.0000 loss=3.737
+[RESULT] method=tsr seed=1 overall=0.4668 plas=0.4261 bwt=+0.0407

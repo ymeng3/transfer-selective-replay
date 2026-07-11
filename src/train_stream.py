@@ -3,10 +3,11 @@ adapter, low-budget protocol).  Methods:
 
   seqft : naive sequential fine-tuning
   er    : uniform experience replay from the buffer (50/50)
-  tsr   : Transfer-Selective Replay (Algorithm 2 of the paper) --
-          probe the task at the fixed shared initialisation, route
-          replay by softmax over signature cosines, and distil each
-          batch against its routed record's era snapshot.
+  tsr_v1, tsr_v2 : Transfer-Selective Replay -- probe the task at
+          the fixed shared initialisation, route by signature
+          similarity over the task memory, and distil against era
+          snapshots.  The two variants are alternative routing
+          configurations of the same general algorithm.
 
 Usage:
     python src/train_stream.py --config configs/trace_0.5b.yaml \
@@ -47,7 +48,8 @@ def set_seed(seed: int) -> None:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", required=True)
-    ap.add_argument("--method", required=True, choices=["seqft", "er", "tsr"])
+    ap.add_argument("--method", required=True,
+                    choices=["seqft", "er", "tsr_v1", "tsr_v2"])
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out_json", default=None)
     args = ap.parse_args()
@@ -86,7 +88,7 @@ def main():
     for t_idx, task in enumerate(tasks):
         # ---- TSR: probe and route before training ----
         sel_j, keys, probs = None, [], []
-        if args.method == "tsr":
+        if args.method.startswith("tsr"):
             g = probe_signature(model, layers, init_snap,
                                 loader_for(task.train_small, args.seed + 977),
                                 cfg["probe_batches"], device)
@@ -104,17 +106,17 @@ def main():
         if args.method == "er" and buffer:
             replay_loaders = [loader_for(ds, args.seed + 31 + j)
                               for j, ds in buffer.items()]
-        elif args.method == "tsr" and keys:
+        elif args.method.startswith("tsr") and keys:
             replay_loaders = [loader_for(buffer[k], args.seed + 31 + k)
                               for k in keys]
         rng = random.Random(args.seed * 7919 + t_idx)
-        use_kd = args.method == "tsr" and t_idx > 0
+        use_kd = args.method.startswith("tsr") and t_idx > 0
 
         model.train()
         for _ in range(cfg["steps"]):
             is_replay = bool(replay_loaders) and rng.random() < cfg["replay_frac"]
             replay_task = None
-            if is_replay and args.method == "tsr":
+            if is_replay and args.method == "tsr_v2":
                 ri = rng.choices(range(len(replay_loaders)), weights=probs)[0]
                 replay_task = keys[ri]
                 ld = replay_loaders[ri]
@@ -129,8 +131,10 @@ def main():
                 # Route the triple: a replay batch from task j is distilled
                 # against task j's era snapshot; target batches anchor to
                 # the top-routed snapshot.
-                snap = snaps.get(replay_task if replay_task is not None
-                                 else sel_j)
+                if args.method == "tsr_v2" and replay_task is not None:
+                    snap = snaps.get(replay_task)
+                else:
+                    snap = snaps.get(sel_j)
                 if snap is not None:
                     tl = teacher_logits(b, snap)
                     loss = loss + cfg["kd_lambda"] * kl_distill_loss(
