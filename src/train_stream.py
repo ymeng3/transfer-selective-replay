@@ -6,12 +6,11 @@ adapter, low-budget protocol).  Methods:
   tsr_v1, tsr_v2 : Transfer-Selective Replay -- probe the task at
           the fixed shared initialisation, route by signature
           similarity over the task memory, and distil against era
-          snapshots.  The two variants are alternative routing
-          configurations of the same general algorithm.
+          snapshots.
 
 Usage:
     python src/train_stream.py --config configs/trace_0.5b.yaml \
-        --method tsr --seed 0 --out_json results/tsr_s0.json
+        --method tsr_v1 --seed 0 --out_json results/tsr_v1_s0.json
 """
 from __future__ import annotations
 
@@ -128,9 +127,6 @@ def main():
             out = model(**b)
             loss = out.loss
             if use_kd:
-                # Route the triple: a replay batch from task j is distilled
-                # against task j's era snapshot; target batches anchor to
-                # the top-routed snapshot.
                 if args.method == "tsr_v2" and replay_task is not None:
                     snap = snaps.get(replay_task)
                 else:

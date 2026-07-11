@@ -1,0 +1,4 @@
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  86%|████████▌ | 249/290 [00:00<00:00, 2489.13it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 2516.60it/s]
+Map:   0%|          | 0/500 [00:00<?, ? examples/s]Map: 100%|██████████| 500/500 [00:00<00:00, 20091.70 examples/s]
+Map:   0%|          | 0/500 [00:00<?, ? examples/s]Map: 100%|██████████| 500/500 [00:00<00:00, 20095.75 examples/s]
+Repo card metadata block was not found. Setting CardData to empty.

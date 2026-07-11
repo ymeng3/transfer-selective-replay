@@ -1,0 +1,9 @@
+[eval] after=0 on=0 (cstance) acc=0.4680 loss=1.131
+[route] task 1 (fomc) top source = 0 (cstance)
+[eval] after=1 on=0 (cstance) acc=0.5240 loss=0.687
+[eval] after=1 on=1 (fomc) acc=0.5530 loss=0.624
+[route] task 2 (meetingbank) top source = 1 (fomc)
+[eval] after=2 on=0 (cstance) acc=0.5180 loss=0.792
+[eval] after=2 on=1 (fomc) acc=0.5606 loss=0.469
+[eval] after=2 on=2 (meetingbank) acc=0.0040 loss=2.450
+[route] task 3 (py150) top source = 2 (meetingbank)
